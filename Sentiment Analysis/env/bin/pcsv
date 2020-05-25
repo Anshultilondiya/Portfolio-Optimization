@@ -1,0 +1,7 @@
+#!/home/anshul/Work/Machine Learning/Portfolio-Optimization/Sentiment Analysis/env/bin/python
+import pcsv
+from jtutils import fix_broken_pipe
+
+if __name__ == "__main__":
+    fix_broken_pipe()
+    pcsv.pcsv()
