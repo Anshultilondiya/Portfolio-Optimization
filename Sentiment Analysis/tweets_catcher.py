@@ -1,11 +1,10 @@
 import tweepy
-import os
 import pandas as pd
 import auth
 import sys
 from os import path
 import csv
-
+from textblob import TextBlob
 
 def headers_adder(file_name):
     with open(file_name,'w') as csvfile:
@@ -37,7 +36,7 @@ api=tweepy.API(auth)
 
 date_since="2020-03-01"
 
-public_tweets = tweepy.Cursor(api.search,q=str(search_about[1]) ,lang='en',since=date_since,tweet_mode='extended').items(2);
+public_tweets = tweepy.Cursor(api.search,q=str(search_about[1]) ,lang='en',since=date_since,tweet_mode='extended').items(200);
 
 
 # file_name = "tweets.csv"
@@ -49,7 +48,6 @@ if file.empty:
 else:
     previous_lastest_tweet_ID = file.head(1)["ID"]
 
-# print(int(previous_lastest_tweet_ID))
 
 for tweets in public_tweets:
 
@@ -70,6 +68,37 @@ for tweets in public_tweets:
 
 file["Created At"] = pd.to_datetime(file["Created At"])
 file = file.sort_values(by="Created At",ascending=False)
+
+
+recent_tweets = file.head(200)
+
+recent_tweets_list = recent_tweets.values.tolist()
+
+positive=0
+negative=0
+neutral=0
+polr=0
+#Classifying tweets as positive,neutral and negative using textblob library
+for row in recent_tweets_list :
+
+    tweet_text = str(row[3])
+
+    analysis=TextBlob(tweet_text)
+    polr=polr+analysis.sentiment.polarity
+    if analysis.sentiment.polarity>0:
+        positive=positive+1
+    elif analysis.sentiment.polarity<0:
+        negative=negative+1
+    else:
+        neutral=neutral+1
+
+    
+# Results showing number of tweets of each category and overall polarity between(-1,1)
+print('Positive',positive)
+print('Negative',negative)
+print('Neutral',neutral)
+print('Polarity',polr/100)
+
 
 file.to_csv(file_name)
 print("File Written Successfully")
