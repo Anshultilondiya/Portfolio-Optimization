@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import tweepy
 import pandas as pd
 import sys
@@ -157,7 +156,3 @@ def sentiment_analysis(Companies_Names_Array):
             print("File Written Successfully")
 
     print_output(output)
-=======
-import tweets_catcher
-import textblob as TB 
->>>>>>> b0f8d2c9cb69ff391d120ee6ab0842ecc51f06e7
