@@ -77,7 +77,7 @@ def sentiment_analysis(Companies_Names_Array):
                 print("Tweet File of "+company+" Found Empty")
                 headers_adder(file_name)
 
-        tweets_to_be_retrieve = 200
+        tweets_to_be_retrieve = 1000
 
         public_tweets = tweepy.Cursor(api.search,q=str(company) ,lang='en',since=date_since,tweet_mode='extended').items(tweets_to_be_retrieve);
 
@@ -129,7 +129,7 @@ def sentiment_analysis(Companies_Names_Array):
         file["Created At"] = pd.to_datetime(file["Created At"])
         file = file.sort_values(by="Created At",ascending=False)
 
-        recent_tweets = file.head(200)
+        recent_tweets = file.head(tweets_to_be_retrieve)
 
         recent_tweets_list = recent_tweets.values.tolist()
 
@@ -146,7 +146,7 @@ def sentiment_analysis(Companies_Names_Array):
                 negative_count = negative_count + 1
             elif(polarity == 0):
                 neutral_count = neutral_count + 1
-            results={"S.No.":index,"Name":company,"Positive Tweets": positive_count,"Negative Tweets":negative_count,"Neutral Tweets": neutral_count,"Polarity":strength/100}
+            results={"S.No.":index,"Name":company,"Positive Tweets": positive_count,"Negative Tweets":negative_count,"Neutral Tweets": neutral_count,"Polarity":strength/tweets_to_be_retrieve}
         output_array.append(results)
         output  = pd.DataFrame(output_array)
 
